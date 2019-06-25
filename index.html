@@ -9,27 +9,54 @@
     <link rel="stylesheet" type="text/css" href="./style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="https://kit.fontawesome.com/33c440a720.js"></script>
 </head>
 
 <body>
-    <style> 
-    
-    </style>
-        <div class="login">
-          <form>
-                <div class="form__group">
-                        <input type = "text" id = "username" class = "form__field" required placeholder = "Enter Username">
-                        <label for = "username" class="form__label"> CC Login Username : </label>
-                </div>
-
-                <div class="form__group">
-                        <input type = "password" id = "password" class = "form__field" required placeholder = "Enter Password">
-                        <label for = "password" class = "form__label"> CC Login Password  : </label>
-                </div>
-              
-            <input type="Submit"  class="top-space button-submit " onclick="getDetails()">  
-          </form>
+    <div class="login">
+        <div class="form__group">
+                <input type = "text" id = "username" class = "form__field"  placeholder = "Enter Username">
+                <label for = "username" class="form__label"> CC Login Username : </label>
         </div>
+
+        <div class="form__group">
+                <input type = "password" id = "password" class = "form__field"  placeholder = "Enter Password">
+                <label for = "password" class = "form__label"> CC Login Password  : </label>
+        </div>
+          
+        <input type="Submit"  class="top-space button-submit " onclick="getDetails()">  
+        
+        <div class="get-questions">  <br>
+            <div class="select">
+                <select class="select-text" required>
+                    <option value="" disabled selected> Select a questionairre </option>
+                </select>
+
+                <span class="select-highlight"></span>
+                <span class="select-bar"></span>
+                <label class="select-label">Select</label>
+            </div>
+            
+            <div class="form__group">
+                  <input type = "text" id = "url" class = "form__field" required placeholder = "Enter URL">
+                  <label for = "url" class = "form__label"> URL of Excel sheet : </label>
+            </div> 
+            <br>
+        </div>
+    </div>
+
+    <div class = "create-table"> <br>
+      <table id = "myTable">
+        <tr>
+          <th> Question ID </th>
+          <th> Note </th>
+          <th> Excel Header </th>
+          <th> Editing Options </th>
+        </tr>
+    
+    </div>
+
+
         
 </body>
 <script src = "index.js"> </script>
