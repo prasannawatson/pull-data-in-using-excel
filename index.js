@@ -12,7 +12,11 @@ function getQuestionairreName(auth_token){
         contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
         Authorization : auth_token
     });
-    console.log(response);
+    // if(user.username != "" && user.password != ""){
+    //     document.querySelector('.login').style.display = "none";
+    //     document.querySelector('.get-questions').style.display = "block";
+    //     // window.location.replace = "./questionnaires.html";
+    //     }
 }
 
 function getAuthenticationToken(user){
@@ -36,7 +40,9 @@ function getAuthenticationToken(user){
             console.log(xhr.statusText);
         }
     };
+    console.log(settings);
     $.ajax(settings).done(function(oResponse) {
+        console.log(oResponse);
         if (oResponse) {
             console.log(oResponse.access_token);
             }
@@ -51,4 +57,5 @@ function getDetails(){
         "password"   : document.getElementById("password").value
     };
     getAuthenticationToken(user);
+ 
 }
