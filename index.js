@@ -12,6 +12,11 @@ function getQuestionairreName(){
         contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
         Authorization : 'Bearer Bi3l8iVdFEPZHcDc7R-TXlvD8nOu_nnx4sPGOYnhIRYLcB1gdNZbaeOGlvTjfQ-xJAmHVL4-ns9VthbYmHRDl9bJqAG1PyQ5FCSpaihRkFd9-1p1GNdYQN9O3Qy0wIWoTGIl5YOqnPAVL0uVd5VmgbSukEm-AlzqMxIbOg31hTmyixj6fCb_OtqKbRUg4YUBLY-8GIy2lz75aYC_79mZbGP3fa6teD2ZFDbm59jgAdO6agdOxLMRvKJMHrwUj0HX99acrVsCGdOfdzGWpdZLy1COJ6f7X511NNid9rfm7sISo_ab9eqtX71IlrvTA1PfC4lm2zKN3X2LNe5O0vDE0pJc1WGkVqxVSvcAOG4nNAVlFS5sQGztxhKOT-jxfoxAwE8Qh9xdP6s_bBdN4itTigB5SDptcndr9FzRxBlV0vJuu6sqarCP9F1yIEqsQBl9EJylDXpqeJD_YmSfDUyWZuVSf_hqGLVHhH4K4irjp_-5wsI5DGMe670DBymAGQ5b3Ensyf0YiP856fiqv3fUHY3T77ZPfTl7N3SNUnEDDJ7qzLEK'
     });
+    if(user.username != "" && user.password != ""){
+        document.querySelector('.login').style.display = "none";
+        document.querySelector('.get-questions').style.display = "block";
+        // window.location.replace = "./questionnaires.html";
+        }
 }
 
 
@@ -30,6 +35,8 @@ function getAuthenticationToken(user){
     });
     getQuestionairreName();
     console.log($.responseText);
+
+   
 }
 
 var user;
@@ -41,4 +48,5 @@ function getDetails(){
         "password"   : document.getElementById("password").value
     };
     getAuthenticationToken(user);
+ 
 }

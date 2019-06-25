@@ -6,93 +6,17 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 </head>
 
 <body>
     <style> 
-    body{
-        font-family: 'Open Sans', sans-serif;
-    }
-    label{
-        font-size:14px;
-    }
-    .form__group {
-  position: relative;
-  padding: 15px 0 0;
-  margin-top: 10px;
-}
-
-.form__field {
-  font-family: inherit;
-  width: 100%;
-  border: 0;
-  border-bottom: 1px solid #d2d2d2;
-  outline: 0;
-  font-size: 14px;
-  color: #212121;
-  padding: 7px 0;
-  background: transparent;
-  transition: border-color 0.2s;
-}
-
-.form__field::placeholder {
-  color: transparent;
-}
-
-.form__field:placeholder-shown ~ .form__label {
-  font-size: 14px;
-  cursor: text;
-  top: 20px;
-}
-
-label,
-.form__field:focus ~ .form__label {
-  position: absolute;
-  top: 0;
-  display: block;
-  transition: 0.2s;
-  font-size: 12px;
-  color: #9b9b9b;
-}
-.container button {
-    width: 164px;
-    height: 48px;
-    font-size: 16px;
-    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-    background-color: #EF5451;
-    border-radius: 2px;
-    border: none;
-    color: #ffffff;
-    margin-top: 16px;
-    font-weight: 600;
-    text-transform: uppercase;
-    cursor: pointer;
-    outline: none;
-    font-family: "Open Sans", sans-serif;
-}
-.form__field:focus ~ .form__label {
-  color: #EF5451;
-}
-
-.form__field:focus {
-  padding-bottom: 6px;
-  border-bottom: 2px solid #EF5451;
-}
-        button{
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .container {
-            height: 150px;
-    margin: auto;
-    width: 300PX;
-    text-align: center;
-}
+    
     </style>
-        <div class="container">
+        <div class="login">
+            <form >
                 <div class="form__group">
                         <input type = "text" id = "username" class = "form__field" required placeholder = "Enter Username">
                         <label for = "username" class="form__label"> CC Login Username : </label>
@@ -102,20 +26,12 @@ label,
                         <input type = "password" id = "password" class = "form__field" required placeholder = "Enter Password">
                         <label for = "password" class = "form__label"> CC Login Password  : </label>
                 </div>
-
-                <div class="form__group">
-                        <input type = "text" id = "qname" class = "form__field" required placeholder = "Enter Questionairre name">
-                        <label for = "qname" class = "form__label"> Questionairre name : </label>
-                </div>
-
-                <div class="form__group">
-                        <input type = "text" id = "url" class = "form__field" required placeholder = "Enter URL">
-                        <label for = "url" class = "form__label"> URL of Excel sheet : </label>
-                </div> <br>
-
-            <button type="submit" onclick="getDetails()"> Submit </button>
-            <script src = "index.js"> </script>
+              
+            <button type="submit" class="top-space" onclick="getDetails()"> Submit </button>
+            
+          </form>
         </div>
+        
 </body>
-
+<script src = "index.js"> </script>
 </html>
