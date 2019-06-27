@@ -18,6 +18,18 @@ var user;
 var id = [];
 var note = [];
 
+//To trigger the webhook
+function postJson(){
+    var data1 = JSON.stringify(responseJson);
+    
+    var xhr = new XMLHttpRequest();
+    var url = "https://prod-01.southindia.logic.azure.com:443/workflows/0b35538eb7564a1d9e7bc703dc89d800/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=m66ZP7oaSrkWhBIKnGIJ_i9XnC4aM7fCxLjo0mPFknE";
+    var method = "POST";
+    xhr.open(method, url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(data1);
+}
+
 //To delete a row in a table
 function deleteRow(i){
     var r = i.parentNode.parentNode.rowIndex;
@@ -48,10 +60,18 @@ function insertValues(header){
         cell1.innerHTML = id[i];
         cell2.innerHTML = note[i];
         cell3.innerHTML = header[i];
+        response = {
+            "questionId" : id[i],
+            "questionText": header[i],
+            "textInput": "null",
+            "numberInput": 0
+        };
+        responseJson.responses.push(response);
         cell4.appendChild(icon);
         cell4.appendChild(icon1);
     }
     console.log(responseJson);
+    postJson();
 }
 
 //To get data from excel
@@ -130,19 +150,11 @@ function getQuestionId(location,auth_token){
     var i = 0;
     $.ajax(settings).done(function(oResponse) {
         if (oResponse) {
-            //console.log(oResponse);
             for (var j = 0; j < oResponse.length; j++){
                 for (var index = 0; index < oResponse[j].displayLocation.length; index++){
                     if(oResponse[j].displayLocation[index] == location){
                         id[i] = oResponse[j].id;
                         note[i] = oResponse[j].note;
-                        response = {
-                            "questionId" : id[i],
-                            "questionText": note[i],
-                            "textInput": "null",
-                            "numberInput": 0
-                        };
-                        responseJson.responses.push(response);
                         i++;
                     }
                 }
@@ -156,6 +168,7 @@ function selectQuestionairre(auth_token){
     document.querySelector('.select-text').addEventListener("change", function(){
         var location = document.querySelector('.select-text').value;
         responseJson.locationId = location;
+        document.querySelector(".select-text").style.display = "none";
         getQuestionId(location,auth_token);
     });
 }
