@@ -10,6 +10,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <script src="https://kit.fontawesome.com/33c440a720.js"></script>
+   
 </head>
 
 <body>
@@ -22,6 +23,11 @@
         <div class="form__group">
                 <input type = "password" id = "password" class = "form__field"  placeholder = "Enter Password">
                 <label for = "password" class = "form__label"> CC Login Password  : </label>
+        </div>
+
+        <div class="form__group">
+                <input type = "text" id = "survey-token" class = "form__field"  placeholder = "Enter Survey Token">
+                <label for = "survey-token" class="form__label"> Survey Token : </label>
         </div>
           
         <input type="Submit"  class="top-space button-submit " onclick="getDetails()">  
@@ -37,12 +43,13 @@
                 <label class="select-label">Select</label>
             </div>
             
-            <div class="form__group">
-                  <input type = "text" id = "url" class = "form__field" required placeholder = "Enter URL">
-                  <label for = "url" class = "form__label"> URL of Excel sheet : </label>
-            </div> 
             <br>
         </div>
+    </div>
+
+    <div class = "excel-upload">
+      <input type="file" id = "fileUpload" />
+      <input type="button" id="upload" value="Upload" onclick="fileUpload()" />   
     </div>
 
     <div class = "create-table"> <br>
@@ -56,8 +63,11 @@
     
     </div>
 
+    
+
 
         
 </body>
 <script src = "index.js"> </script>
+<script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 </html>

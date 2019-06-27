@@ -217,3 +217,7 @@ margin-top:30px;
 table, th {
     border: 1px solid black;
   }
+
+  .excel-upload{
+    display: none;
+  }

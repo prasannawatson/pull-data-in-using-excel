@@ -1,3 +1,23 @@
+//The sample body of JSON to add response
+responseJson = {
+        "id": "",
+        "user": "",
+        "locationId": "",
+        "responseDateTime": "",
+        "responseDuration": 0,
+        "surveyClient": "",
+        "responses": [
+        ],
+        "archived": false,
+        "notes": [],
+        "openTicket": {},
+        "deviceId": ""
+}
+
+var user;
+var id = [];
+var note = [];
+
 //To delete a row in a table
 function deleteRow(i){
     var r = i.parentNode.parentNode.rowIndex;
@@ -7,13 +27,11 @@ function deleteRow(i){
 //To edit a row in a table
 function editRow(i){
     var r = i.parentNode.parentNode.rowIndex;
-    document.getElementById("myTable").rows[r].contentEditable = "true";
-    //console.log(r);
-    //console.log(table);
+    document.getElementById("myTable").rows[r].cells[2].contentEditable = "true";
 }
 
 //To create table for mapping
-function insertValues(id, note){
+function insertValues(header){
     for(var i = 0; i < id.length; i++){
         var icon = document.createElement("i");
         icon.setAttribute("class" , "fal fa-edit");
@@ -29,9 +47,66 @@ function insertValues(id, note){
         var cell4 = row.insertCell(3);
         cell1.innerHTML = id[i];
         cell2.innerHTML = note[i];
-        cell3.innerHTML = "Excel Header";
+        cell3.innerHTML = header[i];
         cell4.appendChild(icon);
         cell4.appendChild(icon1);
+    }
+    console.log(responseJson);
+}
+
+//To get data from excel
+function ProcessExcel(data) {
+    //Read the Excel File data.
+    var workbook = XLSX.read(data, {
+        type: 'binary'
+    });
+
+    //Fetch the name of First Sheet.
+    var firstSheet = workbook.SheetNames[0];
+
+    //Read all rows from First Sheet into an JSON array.
+    var excelRows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[firstSheet]);
+    var header = Object.keys(excelRows[0]);
+
+    document.querySelector(".create-table").style.display = "block";
+    insertValues(header);
+};
+
+//To get details from Excel
+function fileUpload(filename){
+    var fileUpload = document.getElementById("fileUpload");
+ 
+    //Validate whether File is valid Excel file.
+    var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xls|.xlsx)$/;
+    if (regex.test(fileUpload.value.toLowerCase())) {
+        if (typeof (FileReader) != "undefined") {
+            var reader = new FileReader();
+            //For Browsers other than IE.
+            if (reader.readAsBinaryString) {
+                reader.onload = function (e) {
+                    ProcessExcel(e.target.result);
+                };
+                reader.readAsBinaryString(fileUpload.files[0]);
+            } 
+            else {
+                //For IE Browser.
+                reader.onload = function (e) {
+                    var data = "";
+                    var bytes = new Uint8Array(e.target.result);
+                    for (var i = 0; i < bytes.byteLength; i++) {
+                        data += String.fromCharCode(bytes[i]);
+                    }
+                    ProcessExcel(data);
+                };
+                reader.readAsArrayBuffer(fileUpload.files[0]);
+            }
+        }
+        else {
+            alert("This browser does not support HTML5.");
+        }
+    } 
+    else {
+        alert("Please upload a valid Excel file.");
     }
 }
 
@@ -52,8 +127,6 @@ function getQuestionId(location,auth_token){
         }
     };
     //To store question IDs and notes
-    var id = [];
-    var note = [];
     var i = 0;
     $.ajax(settings).done(function(oResponse) {
         if (oResponse) {
@@ -63,16 +136,18 @@ function getQuestionId(location,auth_token){
                     if(oResponse[j].displayLocation[index] == location){
                         id[i] = oResponse[j].id;
                         note[i] = oResponse[j].note;
+                        response = {
+                            "questionId" : id[i],
+                            "questionText": note[i],
+                            "textInput": "null",
+                            "numberInput": 0
+                        };
+                        responseJson.responses.push(response);
                         i++;
                     }
                 }
             }
         }
-        //console.log(id);
-        //console.log(note);
-        document.querySelector('.create-table').style.display = "block";
-        document.querySelector('.get-questions').style.display = "none"
-        insertValues(id,note);
     })
 }
 
@@ -80,6 +155,7 @@ function getQuestionId(location,auth_token){
 function selectQuestionairre(auth_token){
     document.querySelector('.select-text').addEventListener("change", function(){
         var location = document.querySelector('.select-text').value;
+        responseJson.locationId = location;
         getQuestionId(location,auth_token);
     });
 }
@@ -105,7 +181,7 @@ function getQuestionairreName(auth_token){
         if (oResponse) {
             questionairres = oResponse.locations;
             document.querySelector('.get-questions').style.display = "block"
-            //console.log(oResponse.locations);
+            document.querySelector(".excel-upload").style.display = "block";
 
             //To make a drop down of questionairres
             var select = document.querySelector('.select-text');
@@ -153,14 +229,13 @@ function getAuthenticationToken(user){
     });
 }
 
-var user;
-
 //To get details from Login Page
 function getDetails(){
     user = {
         "username"   : document.getElementById("username").value,
         "password"   : document.getElementById("password").value
     };
+    responseJson.id = document.getElementById("survey-token").value;
     if(user.username == '' || user.password == ''){
         alert("Please provide username and password");
     }
