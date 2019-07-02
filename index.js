@@ -17,6 +17,11 @@ responseJson = {
 var user;
 var id = [];
 var note = [];
+var displayType = [];
+var flag = [];
+var final_id = [];
+var final_note = [];
+var final_header = [];
 
 //To trigger the webhook
 function postJson(){
@@ -28,6 +33,42 @@ function postJson(){
     xhr.open(method, url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(data1);
+}
+
+//To set JSON to add response
+function setJson(excelRows){
+    for (var index = 0; index < excelRows.length; index++){
+        responseJson.responses = [ ];
+        for (var i = 0; i<id.length; i++){
+            var response = {
+                "questionId" : id[i] ,
+                "questionText" : note[i],
+                "textInput" : excelRows[index][final_header[i]],
+                "numberInput" : 0
+            }
+            responseJson.responses.push(response);
+        }
+        console.log(responseJson);
+        //postJson();
+    }
+}
+
+//To set mapping of excel headers and questionairres
+function setMappingArrays(excelRows){
+    for(var i = 1; i < id.length; i++){
+        final_id[i-1] = document.getElementById("myTable").rows[i].cells[0].innerText;
+        final_note[i-1] = document.getElementById("myTable").rows[i].cells[1].innerText;
+        final_header[i-1] = document.getElementById("myTable").rows[i].cells[2].innerText;
+        //To determine whether text or number input
+        if(displayType[i] == "Select" || displayType[i] == "MultiSelect" || displayType[i] == "Text" || displayType[i] == "MultilineText"){
+            //To represent text input
+            flag[i] = 1;
+        }
+        else{
+            flag[i] = 0;
+        }
+    }
+    setJson(excelRows);
 }
 
 //To delete a row in a table
@@ -43,7 +84,7 @@ function editRow(i){
 }
 
 //To create table for mapping
-function insertValues(header){
+function insertValues(header, excelRows){
     for(var i = 0; i < id.length; i++){
         var icon = document.createElement("i");
         icon.setAttribute("class" , "fal fa-edit");
@@ -60,18 +101,12 @@ function insertValues(header){
         cell1.innerHTML = id[i];
         cell2.innerHTML = note[i];
         cell3.innerHTML = header[i];
-        response = {
-            "questionId" : id[i],
-            "questionText": header[i],
-            "textInput": "null",
-            "numberInput": 0
-        };
-        responseJson.responses.push(response);
+
         cell4.appendChild(icon);
         cell4.appendChild(icon1);
     }
+    setMappingArrays(excelRows);
     console.log(responseJson);
-    postJson();
 }
 
 //To get data from excel
@@ -89,7 +124,7 @@ function ProcessExcel(data) {
     var header = Object.keys(excelRows[0]);
 
     document.querySelector(".create-table").style.display = "block";
-    insertValues(header);
+    insertValues(header, excelRows);
 };
 
 //To get details from Excel
@@ -155,6 +190,7 @@ function getQuestionId(location,auth_token){
                     if(oResponse[j].displayLocation[index] == location){
                         id[i] = oResponse[j].id;
                         note[i] = oResponse[j].note;
+                        displayType[i] = oResponse[j].displayText;
                         i++;
                     }
                 }
