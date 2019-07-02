@@ -37,29 +37,40 @@ function postJson(){
 
 //To set JSON to add response
 function setJson(excelRows){
+    //console.log(final_header);
     for (var index = 0; index < excelRows.length; index++){
+        //console.log(responseJson)
         responseJson.responses = [ ];
         for (var i = 0; i<id.length; i++){
-            var response = {
-                "questionId" : id[i] ,
-                "questionText" : note[i],
-                "textInput" : excelRows[index][final_header[i]],
-                "numberInput" : 0
+            if(flag[i] == 1){
+                var response = {
+                    "questionId" : id[i] ,
+                    "questionText" : note[i],
+                    "textInput" : excelRows[index][final_header[i]],
+                    "numberInput" : 0
+                }
+                responseJson.responses.push(response);
+                //console.log(response);
             }
-            responseJson.responses.push(response);
+            else if(flag[i] == 0){
+                var response = {
+                    "questionId" : id[i] ,
+                    "questionText" : note[i],
+                    "textInput" : "null",
+                    "numberInput" : excelRows[index][final_header[i]]
+                }
+                responseJson.responses.push(response);
+                //console.log(response);
+            }
         }
         console.log(responseJson);
-        //postJson();
+        postJson();
     }
 }
 
-//To set mapping of excel headers and questionairres
-function setMappingArrays(excelRows){
-    for(var i = 1; i < id.length; i++){
-        final_id[i-1] = document.getElementById("myTable").rows[i].cells[0].innerText;
-        final_note[i-1] = document.getElementById("myTable").rows[i].cells[1].innerText;
-        final_header[i-1] = document.getElementById("myTable").rows[i].cells[2].innerText;
-        //To determine whether text or number input
+//To determine whether text or number input
+function setType(excelRows){
+    for (var i = 0; i < displayType.length; i++){
         if(displayType[i] == "Select" || displayType[i] == "MultiSelect" || displayType[i] == "Text" || displayType[i] == "MultilineText"){
             //To represent text input
             flag[i] = 1;
@@ -69,6 +80,16 @@ function setMappingArrays(excelRows){
         }
     }
     setJson(excelRows);
+}
+
+//To set mapping of excel headers and questionairres
+function setMappingArrays(excelRows){
+    for(var i = 1; i <= id.length; i++){
+        final_id[i-1] = document.getElementById("myTable").rows[i].cells[0].innerText;
+        final_note[i-1] = document.getElementById("myTable").rows[i].cells[1].innerText;
+        final_header[i-1] = document.getElementById("myTable").rows[i].cells[2].innerText;
+    }
+    setType(excelRows);
 }
 
 //To delete a row in a table
@@ -106,7 +127,6 @@ function insertValues(header, excelRows){
         cell4.appendChild(icon1);
     }
     setMappingArrays(excelRows);
-    console.log(responseJson);
 }
 
 //To get data from excel
@@ -190,7 +210,7 @@ function getQuestionId(location,auth_token){
                     if(oResponse[j].displayLocation[index] == location){
                         id[i] = oResponse[j].id;
                         note[i] = oResponse[j].note;
-                        displayType[i] = oResponse[j].displayText;
+                        displayType[i] = oResponse[j].displayType;
                         i++;
                     }
                 }
