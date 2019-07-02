@@ -168,7 +168,10 @@ function selectQuestionairre(auth_token){
     document.querySelector('.select-text').addEventListener("change", function(){
         var location = document.querySelector('.select-text').value;
         responseJson.locationId = location;
-        document.querySelector(".select-text").style.display = "none";
+        document.querySelector(".select-text").disabled = true;
+        document.querySelector(".select-text").style.cursor = "no-drop";
+        document.querySelector(".select-label").style.display = "none";
+        document.querySelector(".excel-upload").style.display = "block";
         getQuestionId(location,auth_token);
     });
 }
@@ -194,7 +197,7 @@ function getQuestionairreName(auth_token){
         if (oResponse) {
             questionairres = oResponse.locations;
             document.querySelector('.get-questions').style.display = "block"
-            document.querySelector(".excel-upload").style.display = "block";
+
 
             //To make a drop down of questionairres
             var select = document.querySelector('.select-text');
@@ -248,7 +251,7 @@ function getDetails(){
         "username"   : document.getElementById("username").value,
         "password"   : document.getElementById("password").value
     };
-    responseJson.id = document.getElementById("survey-token").value;
+    // responseJson.id = document.getElementById("survey-token").value;
     if(user.username == '' || user.password == ''){
         alert("Please provide username and password");
     }
@@ -256,4 +259,17 @@ function getDetails(){
         //To get bearer-token using our Login API
         getAuthenticationToken(user);
     } 
+}
+
+// Span
+var span = document.getElementsByClassName('upload-path');
+// Button
+var uploader = document.getElementsByName('upload');
+// On change
+for( item in uploader ) {
+  // Detect changes
+  uploader[item].onchange = function() {
+    // Echo filename in span
+    span[0].innerHTML = this.files[0].name;
+  }
 }

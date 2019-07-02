@@ -25,17 +25,13 @@
                 <label for = "password" class = "form__label"> CC Login Password  : </label>
         </div>
 
-        <div class="form__group">
-                <input type = "text" id = "survey-token" class = "form__field"  placeholder = "Enter Survey Token">
-                <label for = "survey-token" class="form__label"> Survey Token : </label>
-        </div>
           
         <input type="Submit"  class="top-space button-submit " onclick="getDetails()">  
         
         <div class="get-questions">  <br>
             <div class="select">
                 <select class="select-text" required>
-                    <option value="" disabled selected> Select a questionairre </option>
+                    <option value=""  selected> Select a questionairre </option>
                 </select>
 
                 <span class="select-highlight"></span>
@@ -45,28 +41,27 @@
             
             <br>
         </div>
-    </div>
-
-    <div class = "excel-upload">
-      <input type="file" id = "fileUpload" />
-      <input type="button" id="upload" value="Upload" onclick="fileUpload()" />   
-    </div>
-
-    <div class = "create-table"> <br>
-      <table id = "myTable">
-        <tr>
-          <th> Question ID </th>
-          <th> Note </th>
-          <th> Excel Header </th>
-          <th> Editing Options </th>
-        </tr>
-    
-    </div>
-
-    
-
-
-        
+        <div class = "excel-upload">
+            
+            <div class="browse-wrap">
+                <div class="title">Select File</div>
+                <input type="file" name="upload" class="upload" id = "fileUpload" title="Select File">
+            </div>
+            <span class="upload-path"></span>
+            <input type="button" class="button-submit remove-auto"  id="upload" value="Upload" onclick="fileUpload()" />   
+          </div>
+      
+          <div class = "create-table"> <br>
+            <table id = "myTable">
+              <tr>
+                <th> Question ID </th>
+                <th> Note </th>
+                <th> Excel Header </th>
+                <th> Editing Options </th>
+              </tr>
+          
+          </div>  
+    </div>     
 </body>
 <script src = "index.js"> </script>
 <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
