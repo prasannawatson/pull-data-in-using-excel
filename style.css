@@ -185,7 +185,6 @@ background-color: #EF5451;
 border-radius: 2px;
 border: none;
 color: #ffffff;
-margin-top: 16px;
 font-weight: 600;
 text-transform: uppercase;
 cursor: pointer;
@@ -301,16 +300,6 @@ td[contenteditable="true"]{
     border-bottom: 1px solid #ccc;
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
-    position: absolute;
-	width: 0.5px;
-	height: 90%;
-	background-color: black;
-	left: 5px;
-	top: 10%;
-	animation-name: blink;
-	animation-duration: 900ms;
-	animation-iteration-count: infinite;
-	opacity: 1;
 }
   .create-table{
     margin: auto;
@@ -320,4 +309,8 @@ td[contenteditable="true"]{
     display: block;
     float: right;
     margin: 0;
+  }
+  .table-submit{
+      float: right;
+      position: relative;
   }

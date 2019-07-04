@@ -51,7 +51,8 @@
             <input type="button" class="button-submit remove-auto"  id="upload" value="Upload" onclick="fileUpload()" />   
           </div>
         </div> 
-          <div class = "create-table"> <br>
+
+        <div class = "create-table"> <br>
             <table id = "myTable">
               <tr>
                 <th> Question ID </th>
@@ -59,8 +60,12 @@
                 <th> Excel Header </th>
                 <th> Editing Options </th>
               </tr>
-          
-          </div>      
+              <div>
+                <input type="Submit"  class=" table-submit button-submit " onclick="setMappingArrays()">
+            </div>
+        </div>
+        
+        
 </body>
 <script src = "index.js"> </script>
 <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>

@@ -1,17 +1,9 @@
 //The sample body of JSON to add response
 responseJson = {
-        "id": "",
-        "user": "",
         "locationId": "",
-        "responseDateTime": "",
-        "responseDuration": 0,
-        "surveyClient": "",
         "responses": [
         ],
-        "archived": false,
-        "notes": [],
-        "openTicket": {},
-        "deviceId": ""
+        "archived": false
 }
 
 var user;
@@ -22,6 +14,7 @@ var flag = [];
 var final_id = [];
 var final_note = [];
 var final_header = [];
+var excelRows = [];
 
 //To trigger the webhook
 function postJson(){
@@ -36,7 +29,7 @@ function postJson(){
 }
 
 //To set JSON to add response
-function setJson(excelRows){
+function setJson(){
     //console.log(final_header);
     for (var index = 0; index < excelRows.length; index++){
         //console.log(responseJson)
@@ -44,8 +37,8 @@ function setJson(excelRows){
         for (var i = 0; i<id.length; i++){
             if(flag[i] == 1){
                 var response = {
-                    "questionId" : id[i] ,
-                    "questionText" : note[i],
+                    "questionId" : final_id[i] ,
+                    "questionText" : final_note[i],
                     "textInput" : excelRows[index][final_header[i]],
                     "numberInput" : 0
                 }
@@ -54,24 +47,22 @@ function setJson(excelRows){
             }
             else if(flag[i] == 0){
                 var response = {
-                    "questionId" : id[i] ,
-                    "questionText" : note[i],
+                    "questionId" : final_id[i] ,
+                    "questionText" : final_note[i],
                     "textInput" : "null",
                     "numberInput" : excelRows[index][final_header[i]]
                 }
                 responseJson.responses.push(response);
-                //console.log(response);
             }
         }
-        console.log(responseJson);
-        postJson();
+       postJson();
     }
 }
 
 //To determine whether text or number input
-function setType(excelRows){
+function setType(){
     for (var i = 0; i < displayType.length; i++){
-        if(displayType[i] == "Select" || displayType[i] == "MultiSelect" || displayType[i] == "Text" || displayType[i] == "MultilineText"){
+        if(displayType[i] == "Select" || displayType[i] == "MultiSelect" || displayType[i] == "Text" || displayType[i] == "MultilineText" || displayType[i] == "Number"){
             //To represent text input
             flag[i] = 1;
         }
@@ -79,17 +70,19 @@ function setType(excelRows){
             flag[i] = 0;
         }
     }
-    setJson(excelRows);
+    //console.log(excelRows);
+    setJson();
 }
 
 //To set mapping of excel headers and questionairres
-function setMappingArrays(excelRows){
+function setMappingArrays(){
+    alert("Responses are getting pulled in");
     for(var i = 1; i <= id.length; i++){
         final_id[i-1] = document.getElementById("myTable").rows[i].cells[0].innerText;
         final_note[i-1] = document.getElementById("myTable").rows[i].cells[1].innerText;
         final_header[i-1] = document.getElementById("myTable").rows[i].cells[2].innerText;
     }
-    setType(excelRows);
+    setType();
 }
 
 //To delete a row in a table
@@ -105,7 +98,7 @@ function editRow(i){
 }
 
 //To create table for mapping
-function insertValues(header, excelRows){
+function insertValues(header){
     for(var i = 0; i < id.length; i++){
         var icon = document.createElement("i");
         icon.setAttribute("class" , "fal fa-edit");
@@ -126,7 +119,7 @@ function insertValues(header, excelRows){
         cell4.appendChild(icon);
         cell4.appendChild(icon1);
     }
-    setMappingArrays(excelRows);
+    //setMappingArrays();
 }
 
 //To get data from excel
@@ -140,15 +133,15 @@ function ProcessExcel(data) {
     var firstSheet = workbook.SheetNames[0];
 
     //Read all rows from First Sheet into an JSON array.
-    var excelRows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[firstSheet]);
+    excelRows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[firstSheet]);
     var header = Object.keys(excelRows[0]);
 
     document.querySelector(".create-table").style.display = "block";
-    insertValues(header, excelRows);
+    insertValues(header);
 };
 
 //To get details from Excel
-function fileUpload(filename){
+function fileUpload(){
     var fileUpload = document.getElementById("fileUpload");
  
     //Validate whether File is valid Excel file.
