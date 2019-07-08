@@ -1,9 +1,15 @@
+body =[
+
+];
 //The sample body of JSON to add response
 responseJson = {
         "locationId": "",
         "responses": [
         ],
-        "archived": false
+        "archived": false,
+        "username": "",
+        "password": "",
+        "auth_token" : ""
 }
 
 var user;
@@ -21,7 +27,7 @@ function postJson(){
     var data1 = JSON.stringify(responseJson);
     
     var xhr = new XMLHttpRequest();
-    var url = "https://prod-01.southindia.logic.azure.com:443/workflows/0b35538eb7564a1d9e7bc703dc89d800/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=m66ZP7oaSrkWhBIKnGIJ_i9XnC4aM7fCxLjo0mPFknE";
+    var url = "https://prod-29.southindia.logic.azure.com:443/workflows/4aa426e86d92469591fd37883e34fb4b/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=I73w_8_OY5uyEQTCvKXqrTMggxieZtWsoU-qXWtlMu8";
     var method = "POST";
     xhr.open(method, url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -30,9 +36,7 @@ function postJson(){
 
 //To set JSON to add response
 function setJson(){
-    //console.log(final_header);
     for (var index = 0; index < excelRows.length; index++){
-        //console.log(responseJson)
         responseJson.responses = [ ];
         for (var i = 0; i<id.length; i++){
             if(flag[i] == 1){
@@ -43,7 +47,6 @@ function setJson(){
                     "numberInput" : 0
                 }
                 responseJson.responses.push(response);
-                //console.log(response);
             }
             else if(flag[i] == 0){
                 var response = {
@@ -54,9 +57,11 @@ function setJson(){
                 }
                 responseJson.responses.push(response);
             }
+            body.push(responseJson);
         }
-       postJson();
+        //postJson();
     }
+    console.log(body);
 }
 
 //To determine whether text or number input
@@ -70,7 +75,6 @@ function setType(){
             flag[i] = 0;
         }
     }
-    //console.log(excelRows);
     setJson();
 }
 
@@ -94,32 +98,64 @@ function deleteRow(i){
 //To edit a row in a table
 function editRow(i){
     var r = i.parentNode.parentNode.rowIndex;
-    document.getElementById("myTable").rows[r].cells[2].contentEditable = "true";
+    document.getElementById("myTable").rows[r].cells[1].contentEditable = "true";
 }
 
 //To create table for mapping
-function insertValues(header){
-    for(var i = 0; i < id.length; i++){
-        var icon = document.createElement("i");
-        icon.setAttribute("class" , "fal fa-edit");
-        icon.setAttribute("onClick" , "editRow(this);")
-        var icon1 = document.createElement("i");
-        icon1.setAttribute("class" , "fal fa-trash-alt");
-        icon1.setAttribute("onClick" , "deleteRow(this);")
-        var table = document.getElementById("myTable");
-        var row = table.insertRow(i+1);
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        var cell3 = row.insertCell(2);
-        var cell4 = row.insertCell(3);
-        cell1.innerHTML = id[i];
-        cell2.innerHTML = note[i];
-        cell3.innerHTML = header[i];
+function insertValues(header1, note1){
+    var icon = document.createElement("i");
+    icon.setAttribute("class" , "fal fa-edit");
+    icon.setAttribute("onClick" , "editRow(this);")
+    var icon1 = document.createElement("i");
+    icon1.setAttribute("class" , "fal fa-trash-alt");
+    icon1.setAttribute("onClick" , "deleteRow(this);")
+    var table = document.getElementById("myTable");
+    var row = table.insertRow();
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    cell1.innerHTML = note1;
+    cell2.innerHTML = header1;
 
-        cell4.appendChild(icon);
-        cell4.appendChild(icon1);
+    cell3.appendChild(icon);
+    cell3.appendChild(icon1);
+}
+
+function fillTable(){
+    document.querySelector(".create-table").style.display = "block";
+    var header1, note1;
+    document.querySelector('.select-header').addEventListener("change", function(){
+        header1 = document.querySelector('.select-text').value;
+    });
+    document.querySelector('.select-note').addEventListener("change", function(){
+        note1 = document.querySelector('.select-text').value;
+        insertValues(header1,note1);
+    });
+    
+}
+
+
+//To make a drop down of headers and note
+function displayDropdown(header){
+    document.querySelector(".select-header").style.display = "block";
+    document.querySelector(".select-note").style.display = "block";
+    var selectHeader = document.querySelector('.select-header');
+    for (var i = 0; i< header.length; i++){
+        var headers = header[i];
+        var option1 = document.createElement("option");
+        option1.textContent = headers;
+        option1.value = headers;
+        selectHeader.appendChild(option1);
     }
-    //setMappingArrays();
+    var selectNote = document.querySelector('.select-note');
+    for (var i = 0; i< note.length; i++){
+        var notes = note[i];
+        var option2 = document.createElement("option");
+        option2.textContent = notes;
+        option2.value = notes;
+        selectNote.appendChild(option2);
+    }
+    fillTable();
 }
 
 //To get data from excel
@@ -136,8 +172,7 @@ function ProcessExcel(data) {
     excelRows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[firstSheet]);
     var header = Object.keys(excelRows[0]);
 
-    document.querySelector(".create-table").style.display = "block";
-    insertValues(header);
+    displayDropdown(header);
 };
 
 //To get details from Excel
@@ -257,9 +292,9 @@ function getQuestionairreName(auth_token){
                 option.value = question;
                 select.appendChild(option);
             }
-            selectQuestionairre(auth_token);
         }
     });
+    selectQuestionairre(auth_token);
 }
 
 //To get bearer-token using our Login API
@@ -269,7 +304,7 @@ function getAuthenticationToken(user){
         username: user.username,
         password: user.password
     };
-
+    var auth_token;
     var settings = {
         "async": true,
         "crossDomain": true,
@@ -287,6 +322,7 @@ function getAuthenticationToken(user){
     $.ajax(settings).done(function(oResponse) {
         if (oResponse) {
             auth_token = oResponse.token_type + ' ' + oResponse.access_token;
+            responseJson.auth_token = auth_token;
             document.querySelector('.button-submit').style.display = "none";
             //Calling settings API to get questionairres 
             getQuestionairreName(auth_token);
@@ -305,6 +341,8 @@ function getDetails(){
         alert("Please provide username and password");
     }
     else{
+        responseJson.username = user.username;
+        responseJson.password = user.password;
         //To get bearer-token using our Login API
         getAuthenticationToken(user);
     } 

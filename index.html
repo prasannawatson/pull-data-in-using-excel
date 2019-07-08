@@ -41,21 +41,46 @@
             
             <br>
         </div>
-        <div class = "excel-upload">
+        <div class ="excel-upload">
             
             <div class="browse-wrap">
                 <div class="title">Select File</div>
                 <input type="file" name="upload" class="upload" id = "fileUpload" title="Select File">
             </div>
             <span class="upload-path"></span>
-            <input type="button" class="button-submit remove-auto"  id="upload" value="Upload" onclick="fileUpload()" />   
+            <input type="button" class="button-submit remove-auto"  id="upload" value="Upload" onclick="fileUpload()" />  <br> 
           </div>
+          
+          
+        <div class="select-header">
+            <div class="select">
+                <select class="select-text" required>
+                    <option value=""  selected> Select Headers </option>
+                </select>
+
+                <span class="select-highlight"></span>
+                <span class="select-bar"></span>
+                <label class="select-label">Select</label> <br>
+            </div>
+        </div>
+
+        <div class ="select-note">
+            <div class="select">
+                <select class="select-text" required>
+                    <option value=""  selected> Select Notes </option>
+                </select>
+
+                <span class="select-highlight"></span>
+                <span class="select-bar"></span>
+                <label class="select-label">Select</label>
+            </div>
+        </div>
+
         </div> 
 
         <div class = "create-table"> <br>
             <table id = "myTable">
               <tr>
-                <th> Question ID </th>
                 <th> Note </th>
                 <th> Excel Header </th>
                 <th> Editing Options </th>
