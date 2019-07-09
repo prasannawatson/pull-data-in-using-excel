@@ -17,7 +17,6 @@ var id = [];
 var note = [];
 var displayType = [];
 var flag = [];
-var final_id = [];
 var final_note = [];
 var final_header = [];
 var excelRows = [];
@@ -59,7 +58,6 @@ function setJson(){
             }
             body.push(responseJson);
         }
-        //postJson();
     }
     console.log(body);
 }
@@ -82,30 +80,50 @@ function setType(){
 function setMappingArrays(){
     alert("Responses are getting pulled in");
     for(var i = 1; i <= id.length; i++){
-        final_id[i-1] = document.getElementById("myTable").rows[i].cells[0].innerText;
-        final_note[i-1] = document.getElementById("myTable").rows[i].cells[1].innerText;
-        final_header[i-1] = document.getElementById("myTable").rows[i].cells[2].innerText;
+        final_note[i-1] = document.getElementById("myTable").rows[i].cells[0].innerText;
+        final_header[i-1] = document.getElementById("myTable").rows[i].cells[1].innerText;
     }
     setType();
 }
 
+var temp_header, temp_note;
+
 //To delete a row in a table
 function deleteRow(i){
     var r = i.parentNode.parentNode.rowIndex;
+    temp_header = document.getElementById("myTable").rows[r].cells[1].innerHTML;
+    temp_note = document.getElementById("myTable").rows[r].cells[0].innerHTML;
     document.getElementById("myTable").deleteRow(r);
+
+    //To add header to the dropdown
+    var selectHeader = document.querySelector('.headers');
+    var option = document.createElement("option");
+    option.textContent = temp_header;
+    option.value = temp_header;
+    selectHeader.appendChild(option);
+
+    //To add note to the dropdown
+    var select = document.querySelector('.notes');
+    var option = document.createElement("option");
+    option.textContent = temp_note;
+    option.value = temp_note;
+    select.appendChild(option); 
+    
+    document.querySelector(".ok-button").style.display = "block";
 }
 
 //To edit a row in a table
-function editRow(i){
+/*function editRow(i){
     var r = i.parentNode.parentNode.rowIndex;
     document.getElementById("myTable").rows[r].cells[1].contentEditable = "true";
-}
+}*/
 
+var count = 0;
 //To create table for mapping
-function insertValues(header1, note1){
-    var icon = document.createElement("i");
+function insertValues(){
+    /*var icon = document.createElement("i");
     icon.setAttribute("class" , "fal fa-edit");
-    icon.setAttribute("onClick" , "editRow(this);")
+    icon.setAttribute("onClick" , "editRow(this);")*/
     var icon1 = document.createElement("i");
     icon1.setAttribute("class" , "fal fa-trash-alt");
     icon1.setAttribute("onClick" , "deleteRow(this);")
@@ -117,21 +135,35 @@ function insertValues(header1, note1){
     cell1.innerHTML = note1;
     cell2.innerHTML = header1;
 
-    cell3.appendChild(icon);
+    //cell3.appendChild(icon);
     cell3.appendChild(icon1);
+
+    //To remove selected Header from dropdown
+    var x = document.querySelector(".headers");
+    x.remove(x.selectedIndex);
+
+    //To remove selected note from dropdown
+    var y = document.querySelector(".notes");
+    y.remove(y.selectedIndex);
+    count++;
+
+    //Add button will be disabled when all records are submitted
+    if(count == id.length){
+        document.querySelector(".ok-button").style.display = "none";
+    }
 }
 
+var header1, note1;
+
+//To fill the table
 function fillTable(){
     document.querySelector(".create-table").style.display = "block";
-    var header1, note1;
     document.querySelector('.select-header').addEventListener("change", function(){
-        header1 = document.querySelector('.select-text').value;
+        header1 = document.querySelector('.headers').value;
     });
     document.querySelector('.select-note').addEventListener("change", function(){
-        note1 = document.querySelector('.select-text').value;
-        insertValues(header1,note1);
+        note1 = document.querySelector('.notes').value;
     });
-    
 }
 
 
@@ -139,22 +171,25 @@ function fillTable(){
 function displayDropdown(header){
     document.querySelector(".select-header").style.display = "block";
     document.querySelector(".select-note").style.display = "block";
-    var selectHeader = document.querySelector('.select-header');
+    document.querySelector(".ok-button").style.display = "block";
+    var selectHeader = document.querySelector('.headers');
     for (var i = 0; i< header.length; i++){
         var headers = header[i];
-        var option1 = document.createElement("option");
-        option1.textContent = headers;
-        option1.value = headers;
-        selectHeader.appendChild(option1);
+        var option = document.createElement("option");
+        option.textContent = headers;
+        option.value = headers;
+        selectHeader.appendChild(option);
     }
-    var selectNote = document.querySelector('.select-note');
-    for (var i = 0; i< note.length; i++){
-        var notes = note[i];
-        var option2 = document.createElement("option");
-        option2.textContent = notes;
-        option2.value = notes;
-        selectNote.appendChild(option2);
+    //selectHeader.option[selectHeader].remove();
+    var select = document.querySelector('.notes');
+     for (var i = 0; i< note.length; i++){
+       var question = note[i];
+       var option = document.createElement("option");
+       option.textContent = question;
+       option.value = question;
+       select.appendChild(option);
     }
+    //select.option[selectNote.selectedIndex].remove();
     fillTable();
 }
 
@@ -180,7 +215,7 @@ function fileUpload(){
     var fileUpload = document.getElementById("fileUpload");
  
     //Validate whether File is valid Excel file.
-    var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xls|.xlsx)$/;
+    var regex = /^([a-zA-Z0-9\s_\\.\-:()])+(.xls|.xlsx)$/;
     if (regex.test(fileUpload.value.toLowerCase())) {
         if (typeof (FileReader) != "undefined") {
             var reader = new FileReader();
@@ -252,6 +287,7 @@ function selectQuestionairre(auth_token){
     document.querySelector('.select-text').addEventListener("change", function(){
         var location = document.querySelector('.select-text').value;
         responseJson.locationId = location;
+        //location.option[location.selectedIndex].remove();
         document.querySelector(".select-text").disabled = true;
         document.querySelector(".select-text").style.cursor = "no-drop";
         document.querySelector(".select-label").style.display = "none";
@@ -284,7 +320,7 @@ function getQuestionairreName(auth_token){
 
 
             //To make a drop down of questionairres
-            var select = document.querySelector('.select-text');
+            var select = document.querySelector('.questionairres');
             for (var i = 0; i< questionairres.length; i++){
                 var question = questionairres[i];
                 var option = document.createElement("option");

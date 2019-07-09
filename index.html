@@ -30,7 +30,7 @@
         
         <div class="get-questions">  <br>
             <div class="select">
-                <select class="select-text" required>
+                <select class="select-text questionairres" required>
                     <option value=""  selected> Select a questionairre </option>
                 </select>
 
@@ -54,29 +54,30 @@
           
         <div class="select-header">
             <div class="select">
-                <select class="select-text" required>
+                <select class="select-text headers" required>
                     <option value=""  selected> Select Headers </option>
                 </select>
 
                 <span class="select-highlight"></span>
                 <span class="select-bar"></span>
-                <label class="select-label">Select</label> <br>
+                <label class="select-label"></label> <br>
             </div>
         </div>
-
-        <div class ="select-note">
-            <div class="select">
-                <select class="select-text" required>
-                    <option value=""  selected> Select Notes </option>
-                </select>
-
-                <span class="select-highlight"></span>
-                <span class="select-bar"></span>
-                <label class="select-label">Select</label>
-            </div>
+        <div class="select-note">
+                <div class="select">
+                    <select class="select-text notes" required>
+                        <option value=""  selected> Select Notes </option>
+                    </select>
+    
+                    <span class="select-highlight"></span>
+                    <span class="select-bar"></span>
+                    <label class="select-label"></label>
+                </div>
         </div>
 
-        </div> 
+        <input type="OK"  value = "Add" class="top-space button-submit ok-button"  contenteditable="false" onclick="insertValues()"> 
+
+    </div>
 
         <div class = "create-table"> <br>
             <table id = "myTable">

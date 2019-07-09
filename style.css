@@ -190,6 +190,7 @@ text-transform: uppercase;
 cursor: pointer;
 outline: none;
 font-family: "Open Sans", sans-serif;
+text-align: center;
 }
 div.browse-wrap {
     left: 0;
@@ -320,3 +321,6 @@ td[contenteditable="true"]{
       float: right;
       position: relative;
   }
+  .ok-button{
+    display:none;
+}
