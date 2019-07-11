@@ -1,15 +1,14 @@
-body =[
-
-];
+Jsonbody ={
+    "body" :[],
+    "username": "",
+    "password": "",
+    "auth_token" : ""
+};
 //The sample body of JSON to add response
 responseJson = {
         "locationId": "",
-        "responses": [
-        ],
-        "archived": false,
-        "username": "",
-        "password": "",
-        "auth_token" : ""
+        "responses": [],
+        "archived": false        
 }
 
 var user;
@@ -17,6 +16,7 @@ var id = [];
 var note = [];
 var displayType = [];
 var flag = [];
+var final_id = [];
 var final_note = [];
 var final_header = [];
 var excelRows = [];
@@ -26,7 +26,7 @@ function postJson(){
     var data1 = JSON.stringify(responseJson);
     
     var xhr = new XMLHttpRequest();
-    var url = "https://prod-29.southindia.logic.azure.com:443/workflows/4aa426e86d92469591fd37883e34fb4b/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=I73w_8_OY5uyEQTCvKXqrTMggxieZtWsoU-qXWtlMu8";
+    var url = "https://prod-01.southindia.logic.azure.com:443/workflows/0b35538eb7564a1d9e7bc703dc89d800/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=m66ZP7oaSrkWhBIKnGIJ_i9XnC4aM7fCxLjo0mPFknE";
     var method = "POST";
     xhr.open(method, url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -56,10 +56,11 @@ function setJson(){
                 }
                 responseJson.responses.push(response);
             }
-            body.push(responseJson);
         }
+        Jsonbody.body.push(responseJson);
     }
-    console.log(body);
+    console.log(Jsonbody);
+    //postJson();
 }
 
 //To determine whether text or number input
@@ -73,13 +74,14 @@ function setType(){
             flag[i] = 0;
         }
     }
-    setJson();
+    //setJson();
 }
 
 //To set mapping of excel headers and questionairres
 function setMappingArrays(){
     alert("Responses are getting pulled in");
     for(var i = 1; i <= id.length; i++){
+        final_id[i-1] = document.getElementById("myTable").rows[i].cells[2].innerText;
         final_note[i-1] = document.getElementById("myTable").rows[i].cells[0].innerText;
         final_header[i-1] = document.getElementById("myTable").rows[i].cells[1].innerText;
     }
@@ -109,7 +111,8 @@ function deleteRow(i){
     option.value = temp_note;
     select.appendChild(option); 
     
-    document.querySelector(".ok-button").style.display = "block";
+    count--;
+    //document.querySelector(".ok-button").style.display = "block";
 }
 
 //To edit a row in a table
@@ -121,6 +124,12 @@ function deleteRow(i){
 var count = 0;
 //To create table for mapping
 function insertValues(){
+    var temp;
+    for(var j = 0; j < note.length; j++){
+        if(note1 == note[j]){
+            temp = id[j];
+        }
+    }
     /*var icon = document.createElement("i");
     icon.setAttribute("class" , "fal fa-edit");
     icon.setAttribute("onClick" , "editRow(this);")*/
@@ -132,11 +141,13 @@ function insertValues(){
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
+    var cell4 = row.insertCell(3);
     cell1.innerHTML = note1;
     cell2.innerHTML = header1;
+    cell3.innerHTML = temp;
 
     //cell3.appendChild(icon);
-    cell3.appendChild(icon1);
+    cell4.appendChild(icon1);
 
     //To remove selected Header from dropdown
     var x = document.querySelector(".headers");
@@ -146,23 +157,35 @@ function insertValues(){
     var y = document.querySelector(".notes");
     y.remove(y.selectedIndex);
     count++;
+    n = 0;
+    document.querySelector(".ok-button").style.display = "none";
 
     //Add button will be disabled when all records are submitted
     if(count == id.length){
         document.querySelector(".ok-button").style.display = "none";
+        document.querySelector(".table-submit").style.display = "block";
     }
 }
 
-var header1, note1;
+var header1, note1, n = 0;
 
-//To fill the table
-function fillTable(){
+//To get the values
+function getValues(){
     document.querySelector(".create-table").style.display = "block";
     document.querySelector('.select-header').addEventListener("change", function(){
         header1 = document.querySelector('.headers').value;
+        n++;
+        if(n == 2){
+            document.querySelector(".ok-button").style.display = "block";
+        }
+
     });
     document.querySelector('.select-note').addEventListener("change", function(){
         note1 = document.querySelector('.notes').value;
+        n++;
+        if(n == 2){
+            document.querySelector(".ok-button").style.display = "block";
+        }
     });
 }
 
@@ -171,7 +194,8 @@ function fillTable(){
 function displayDropdown(header){
     document.querySelector(".select-header").style.display = "block";
     document.querySelector(".select-note").style.display = "block";
-    document.querySelector(".ok-button").style.display = "block";
+
+    //Header dropdown
     var selectHeader = document.querySelector('.headers');
     for (var i = 0; i< header.length; i++){
         var headers = header[i];
@@ -180,7 +204,8 @@ function displayDropdown(header){
         option.value = headers;
         selectHeader.appendChild(option);
     }
-    //selectHeader.option[selectHeader].remove();
+    
+    //Note dropdown
     var select = document.querySelector('.notes');
      for (var i = 0; i< note.length; i++){
        var question = note[i];
@@ -189,8 +214,8 @@ function displayDropdown(header){
        option.value = question;
        select.appendChild(option);
     }
-    //select.option[selectNote.selectedIndex].remove();
-    fillTable();
+    
+    getValues();
 }
 
 //To get data from excel
@@ -358,7 +383,7 @@ function getAuthenticationToken(user){
     $.ajax(settings).done(function(oResponse) {
         if (oResponse) {
             auth_token = oResponse.token_type + ' ' + oResponse.access_token;
-            responseJson.auth_token = auth_token;
+            Jsonbody.auth_token = auth_token;
             document.querySelector('.button-submit').style.display = "none";
             //Calling settings API to get questionairres 
             getQuestionairreName(auth_token);
@@ -377,8 +402,8 @@ function getDetails(){
         alert("Please provide username and password");
     }
     else{
-        responseJson.username = user.username;
-        responseJson.password = user.password;
+        Jsonbody.username = user.username;
+        Jsonbody.password = user.password;
         //To get bearer-token using our Login API
         getAuthenticationToken(user);
     } 

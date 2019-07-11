@@ -318,8 +318,8 @@ td[contenteditable="true"]{
     margin: 0;
   }
   .table-submit{
-      float: right;
       position: relative;
+      display: none;
   }
   .ok-button{
     display:none;
