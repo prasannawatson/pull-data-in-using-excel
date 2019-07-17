@@ -1,5 +1,6 @@
 Jsonbody ={
     "body" :[],
+    "archived": false,
     "username": "",
     "password": "",
     "auth_token" : ""
@@ -7,8 +8,7 @@ Jsonbody ={
 //The sample body of JSON to add response
 responseJson = {
         "locationId": "",
-        "responses": [],
-        "archived": false        
+        "responses": []        
 }
 
 var user;
@@ -23,14 +23,23 @@ var excelRows = [];
 
 //To trigger the webhook
 function postJson(){
-    var data1 = JSON.stringify(responseJson);
-    
-    var xhr = new XMLHttpRequest();
-    var url = "https://prod-01.southindia.logic.azure.com:443/workflows/0b35538eb7564a1d9e7bc703dc89d800/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=m66ZP7oaSrkWhBIKnGIJ_i9XnC4aM7fCxLjo0mPFknE";
-    var method = "POST";
-    xhr.open(method, url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(data1);
+    var data1 = JSON.stringify(Jsonbody);
+    console.log(data1);
+    var settingsMonthlyStarhub = {
+        "async": true,
+        "crossDomain": true,
+        "url": "https://54783b6c.ngrok.io/api/ResponseExcel/Post",
+        "method": "POST",
+        "headers": {
+            "Content-Type": "application/json",
+            "Accept": "*/*",
+        },
+        "processData": false,
+        "data": data1,
+        "dataType": "json"
+    }
+    $.ajax(settingsMonthlyStarhub).done(function (oResponse) {
+    });
 }
 
 //To set JSON to add response
@@ -59,8 +68,8 @@ function setJson(){
         }
         Jsonbody.body.push(responseJson);
     }
-    console.log(Jsonbody);
-    //postJson();
+    //console.log(Jsonbody);
+    postJson();
 }
 
 //To determine whether text or number input
@@ -74,11 +83,12 @@ function setType(){
             flag[i] = 0;
         }
     }
-    //setJson();
+    setJson();
 }
 
 //To set mapping of excel headers and questionairres
 function setMappingArrays(){
+    document.querySelector(".table-submit").style.display = "none";
     alert("Responses are getting pulled in");
     for(var i = 1; i <= id.length; i++){
         final_id[i-1] = document.getElementById("myTable").rows[i].cells[2].innerText;
@@ -112,7 +122,6 @@ function deleteRow(i){
     select.appendChild(option); 
     
     count--;
-    //document.querySelector(".ok-button").style.display = "block";
 }
 
 //To edit a row in a table
